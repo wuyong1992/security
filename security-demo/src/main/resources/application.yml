@@ -1,0 +1,28 @@
+spring:
+  session:
+    store-type: none
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://106.15.196.17:3306/security?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    show-sql: true
+  redis:
+      host: 106.15.196.17
+      port: 6379
+      database: 0
+      password: root
+#security:
+#  basic:
+#    enabled: false
+
+#spring.session.store-type=none
+#spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+#spring.datasource.url=jdbc:mysql://106.15.196.17:3306/security?useUnicode=true&characterEncoding=utf8
+#spring.datasource.username=root
+#spring.datasource.password=root
+#spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+
+#security.basic.enabled=false
