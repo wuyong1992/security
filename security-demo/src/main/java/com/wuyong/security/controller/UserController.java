@@ -3,6 +3,7 @@ package com.wuyong.security.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import com.wuyong.security.dto.User;
+import com.wuyong.security.exception.UserNotExistExcepton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -48,7 +49,10 @@ public class UserController {
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getUserInfo(@PathVariable(name = "id") String id) {
-        log.info("id:{}", id);
+//        throw new UserNotExistExcepton(id);
+
+//        log.info("id:{}", id);
+        log.info("进入getUserInfo()服务");
         User user = new User();
         user.setUsername("tom");
         user.setPassword("tompass");
@@ -74,5 +78,7 @@ public class UserController {
         user1.setPassword(user.getPassword());
         return user1;
     }
+
+
 
 }

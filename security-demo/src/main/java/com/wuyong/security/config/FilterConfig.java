@@ -1,0 +1,33 @@
+package com.wuyong.security.config;
+
+import com.google.common.collect.Lists;
+import com.wuyong.security.filter.TimeFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+
+/**
+ * created by JianGuo
+ * on 2018/1/17
+ * description:
+ */
+@Configuration
+public class FilterConfig {
+
+
+    @Bean
+    public FilterRegistrationBean timeFilter(){
+        FilterRegistrationBean frb = new FilterRegistrationBean();
+        TimeFilter timeFilter = new TimeFilter();
+        frb.setFilter(timeFilter);
+
+        // 可以指定作用路径
+        List<String> urls = Lists.newArrayList();
+        urls.add("/*");
+        frb.setUrlPatterns(urls);
+        return frb;
+    }
+
+}
