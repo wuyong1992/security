@@ -2,6 +2,7 @@ package com.wuyong.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.wuyong.security.validator.MyConstraint;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -22,6 +23,7 @@ public class User {
     private String id;
     @JsonView(UserSimpleView.class)
     @MyConstraint
+    @ApiModelProperty(value = "用户名")
     private String username;
     @JsonView(UserDetailView.class)
     @NotBlank(message = "密码不能为空")

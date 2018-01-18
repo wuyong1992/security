@@ -1,0 +1,6 @@
+{
+  "get": "query",
+  "post": "create",
+  "put": "update",
+  "delete": "delete"
+}

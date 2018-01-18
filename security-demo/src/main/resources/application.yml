@@ -26,3 +26,5 @@ spring:
 #spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
 
 #security.basic.enabled=false
+
+wuyong.security.browser.loginPage: /demo-login.html

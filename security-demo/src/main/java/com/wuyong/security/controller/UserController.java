@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.google.common.collect.Lists;
 import com.wuyong.security.dto.User;
 import com.wuyong.security.exception.UserNotExistExcepton;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +26,9 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    @GetMapping
     @JsonView(User.UserSimpleView.class)
+    @ApiOperation(value = "获取所有用户信息")
     public List<User> getUserList(@RequestParam() String username, String size,
                                   @PageableDefault() Pageable pageable) {
         log.info("username:{}", username);
@@ -48,8 +52,10 @@ public class UserController {
 
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
-    public User getUserInfo(@PathVariable(name = "id") String id) {
+    @ApiOperation(value = "根据id获取用户信息")
+    public User getUserInfo(@ApiParam(value = "用户id") @PathVariable(name = "id") String id) {
 //        throw new UserNotExistExcepton(id);
+//        throw new RuntimeException(" run time exception: user not exist ");
 
 //        log.info("id:{}", id);
         log.info("进入getUserInfo()服务");
@@ -60,16 +66,17 @@ public class UserController {
     }
 
     @PostMapping
+    @ApiOperation(value = "根据用户信息保存用户")
     public User saveUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors()
                     .stream()   // 流化
                     .forEach(
-                    (result) -> {
-                        FieldError fieldError = (FieldError)result;
-                        log.info("字段：{}发生错误：{}", fieldError.getField(),fieldError.getDefaultMessage());
-                    }
-            );
+                            (result) -> {
+                                FieldError fieldError = (FieldError) result;
+                                log.info("字段：{}发生错误：{}", fieldError.getField(), fieldError.getDefaultMessage());
+                            }
+                    );
         }
         log.info("收到的user：{}", user);
         User user1 = new User();
@@ -78,7 +85,6 @@ public class UserController {
         user1.setPassword(user.getPassword());
         return user1;
     }
-
 
 
 }
