@@ -9,6 +9,10 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+
+    @GetMapping("/me")
+    public Authentication getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication;
+    }
+    // 这种简写也可以
+    /*public Authentication getCurrentUser(Authentication authentication){
+        return authentication;
+    }*/
+    // 只返回userDetails
+    /*public UserDetails getCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
+        return userDetails;
+    }*/
+
+
+
 
     @GetMapping
     @JsonView(User.UserSimpleView.class)

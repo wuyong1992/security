@@ -3,6 +3,7 @@ package com.wuyong.security.browser;
 import com.wuyong.security.browser.authentication.MyAuthenticationFailureHandler;
 import com.wuyong.security.browser.authentication.MyAuthenticationSuccessHandler;
 import com.wuyong.security.properties.SecurityProperties;
+import com.wuyong.security.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * created by JianGuo
@@ -30,7 +32,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()    // 认证方式 这里是表单登录
+
+        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+        // 设置错误处理器
+        validateCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+
+        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin()    // 认证方式 这里是表单登录
 //                .loginPage("/login.html") // 自定义的登录界面
                 .loginPage("/authentication/require")   // 自定义登录的controller
                 .loginProcessingUrl("/authentication/form") // 自定义的表单上传路径
@@ -40,7 +48,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()    // 对下面请求进行授权
                 // .antMatchers("/**").permitAll() //符合路劲规范的可以放心
 //                .antMatchers("/login.html").permitAll()   // 自身的这个页面必须放行
-                .antMatchers("/authentication/require", securityProperties.getBrowser().getLoginPage()).permitAll()
+                .antMatchers("/authentication/require",
+                        securityProperties.getBrowser().getLoginPage(),
+                        "/code/image").permitAll()
                 .anyRequest()   // 任何请求
                 .authenticated()    // 都需要身份认证
                 .and()

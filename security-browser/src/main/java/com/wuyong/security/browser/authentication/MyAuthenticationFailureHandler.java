@@ -1,6 +1,7 @@
 package com.wuyong.security.browser.authentication;
 
 import com.google.gson.Gson;
+import com.wuyong.security.browser.support.SimpleResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.http.HttpStatus;
@@ -30,6 +31,7 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
         response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         Gson gson = new Gson();
         response.setContentType("application/json;charset=utf-8");
-        response.getWriter().write(gson.toJson(exception));
+//        response.getWriter().write(gson.toJson(exception));
+        response.getWriter().write(gson.toJson(new SimpleResponse(exception.getMessage())));
     }
 }
