@@ -1,7 +1,11 @@
 package com.wuyong.security.validate.code;
 
+import com.wuyong.security.properties.SecurityProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +26,7 @@ import java.util.Random;
  */
 @RestController
 @RequestMapping("/code")
+@Slf4j
 public class ValidateCodeController {
 
     public static final String SESSION_KEY = "SESSION_KEY";
@@ -29,68 +34,17 @@ public class ValidateCodeController {
     //  处理session
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
+    @Autowired
+    private ImageCodeGenerator imageCodeGenerator;
+
+
     @GetMapping("/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ImageCode imageCode = createImageCode(request);
+        ImageCode imageCode = imageCodeGenerator.generator(new ServletWebRequest(request));
         sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
         ImageIO.write(imageCode.getImage(), "JPEG", response.getOutputStream());
     }
 
-    private ImageCode createImageCode(HttpServletRequest request) {
-        // 图片宽、高
-        int width = 67;
-        int height = 23;
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        // 图形对象
-        Graphics graphics = image.getGraphics();
-        Random random = new Random();
 
-        // 背景条纹
-        graphics.setColor(getRandColor(200, 250));
-        graphics.fillRect(0, 0, width, height);
-        graphics.setColor(getRandColor(160, 200));
-
-        for (int i = 0; i < 155; i++) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
-            int xl = random.nextInt(12);
-            int yl = random.nextInt(12);
-            graphics.drawLine(x, y, x + xl, y + yl);
-        }
-        String sRand = "";
-
-        // 4位随机数
-        for (int i = 0; i < 4; i++) {
-            String rand = String.valueOf(random.nextInt(10));
-            sRand += rand;
-            graphics.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
-            graphics.drawString(rand, 13 * i + 6, 16);
-        }
-
-        graphics.dispose();
-
-        return new ImageCode(image, sRand, 60);
-    }
-
-    /**
-     * 生成随机背景条纹
-     *
-     * @param fc
-     * @param bc
-     * @return
-     */
-    private Color getRandColor(int fc, int bc) {
-        Random random = new Random();
-        if (fc > 255) {
-            fc = 255;
-        }
-        if (bc > 255) {
-            bc = 255;
-        }
-        int r = fc + random.nextInt(bc - fc);
-        int g = fc + random.nextInt(bc - fc);
-        int b = fc + random.nextInt(bc - fc);
-        return new Color(r, g, b);
-    }
 
 }

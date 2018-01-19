@@ -12,4 +12,7 @@ import lombok.Data;
 public class BrowserProperties {
     // 用户如果没有配置登录也则使用默认登录页
     private String loginPage = "/login.html";
+
+    // 记住用户多久
+    private int rememberMeSeconds = 60;
 }

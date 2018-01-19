@@ -10,10 +10,10 @@ spring:
   jpa:
     show-sql: true
   redis:
-      host: 106.15.196.17
-      port: 6379
-      database: 0
-      password: root
+    host: 106.15.196.17
+    port: 6379
+    database: 0
+    password: root
 #security:
 #  basic:
 #    enabled: false
@@ -27,4 +27,13 @@ spring:
 
 #security.basic.enabled=false
 
-wuyong.security.browser.loginPage: /demo-login.html
+wuyong.security:
+  browser:
+    loginPage: /demo-login.html
+  code:
+    imageCode:
+      imageWidth: 67
+      imageheight: 23
+      codeLength: 5
+      expireIn: 60
+#      url: /user,/user/*
